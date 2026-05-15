@@ -1,8 +1,6 @@
 # Nuvio Latino Hub Providers
 
-Colección de providers para **Nuvio Media Hub** con el mejor contenido en **Español Latino**. Desde Doramas Coreanos hasta los últimos estrenos de Cine, Series y Anime.
-
-Resolvers avanzados implementados desde cero para garantizar la mejor velocidad y calidad de streaming.
+Scrapers para Nuvio Media Hub con contenido en Español Latino (Cine, Series, Anime y Doramas).
 
 ---
 
