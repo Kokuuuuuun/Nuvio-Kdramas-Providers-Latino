@@ -1,6 +1,6 @@
 /**
  * vimeus - Built from src/vimeus/
- * Generated: 2026-05-15T00:45:55.833Z
+ * Generated: 2026-05-15T01:21:31.380Z
  */
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
@@ -173,7 +173,7 @@ function resolveVoe(embedUrl) {
           if (decoded && (decoded.source || decoded.direct_access_url)) {
             const url = decoded.source || decoded.direct_access_url;
             console.log(`[VOE] URL encontrada: ${url.substring(0, 80)}...`);
-            return { url, quality: "1080p", headers: { Referer: embedUrl } };
+            return { url, quality: "1080p", headers: { "User-Agent": UA, Referer: embedUrl, Origin: new URL(embedUrl).origin } };
           }
         }
       }
@@ -197,7 +197,7 @@ function resolveVoe(embedUrl) {
           }
         }
         console.log(`[VOE] URL encontrada (fallback): ${url.substring(0, 80)}...`);
-        return { url, quality: "720p", headers: { Referer: embedUrl } };
+        return { url, quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl, Origin: new URL(embedUrl).origin } };
       }
       console.log("[VOE] No se encontr\xF3 URL");
       return null;
@@ -269,7 +269,7 @@ function resolveStreamwish(embedUrl) {
         if (url.startsWith("/"))
           url = embedHost + url;
         console.log(`[StreamWish] URL encontrada: ${url.substring(0, 80)}...`);
-        return { url, quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/" } };
+        return { url, quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/", Origin: embedHost } };
       }
       const packMatch = data.match(
         /eval\(function\(p,a,c,k,e,[a-z]\)\{[^}]+\}\s*\('([\s\S]+?)',\s*(\d+),\s*(\d+),\s*'([\s\S]+?)'\.split\('\|'\)/
@@ -285,7 +285,7 @@ function resolveStreamwish(embedUrl) {
             if (url) {
               const fullUrl = url.startsWith("/") ? embedHost + url : url;
               console.log(`[StreamWish] URL encontrada (packed): ${fullUrl.substring(0, 80)}...`);
-              return { url: fullUrl, quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/" } };
+              return { url: fullUrl, quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/", Origin: embedHost } };
             }
           } catch (e) {
           }
@@ -293,13 +293,13 @@ function resolveStreamwish(embedUrl) {
         const m3u8InPacked = unpacked.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
         if (m3u8InPacked) {
           console.log(`[StreamWish] URL m3u8 en packed: ${m3u8InPacked[0].substring(0, 80)}...`);
-          return { url: m3u8InPacked[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/" } };
+          return { url: m3u8InPacked[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/", Origin: embedHost } };
         }
       }
       const rawM3u8 = data.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
       if (rawM3u8) {
         console.log(`[StreamWish] URL m3u8 raw: ${rawM3u8[0].substring(0, 80)}...`);
-        return { url: rawM3u8[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/" } };
+        return { url: rawM3u8[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedHost + "/", Origin: embedHost } };
       }
       console.log("[StreamWish] No se encontr\xF3 URL");
       return null;
@@ -337,7 +337,7 @@ function resolveOkru(embedUrl) {
       return {
         url: best.url,
         quality: QUALITY_MAP[best.type] || best.type,
-        headers: { "User-Agent": UA, Referer: "https://ok.ru/" }
+        headers: { "User-Agent": UA, Referer: "https://ok.ru/", Origin: "https://ok.ru" }
       };
     } catch (e) {
       console.log(`[OkRu] Error: ${e.message}`);
@@ -393,23 +393,27 @@ function resolveGoodstream(embedUrl) {
         const fileMatch2 = unpacked.match(/file\s*:\s*["']([^"']+\.m3u8[^"']*)["']/i) || unpacked.match(/file\s*:\s*["']([^"']+\.mp4[^"']*)["']/i);
         if (fileMatch2) {
           console.log(`[GoodStream] URL en packed: ${fileMatch2[1].substring(0, 80)}...`);
-          return { url: fileMatch2[1], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+          const origin = new URL(embedUrl).origin;
+          return { url: fileMatch2[1], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
         }
         const m3u8InPacked = unpacked.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
         if (m3u8InPacked) {
           console.log(`[GoodStream] m3u8 en packed: ${m3u8InPacked[0].substring(0, 80)}...`);
-          return { url: m3u8InPacked[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+          const origin = new URL(embedUrl).origin;
+          return { url: m3u8InPacked[0], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
         }
       }
       const fileMatch = data.match(/file\s*:\s*["']([^"']+\.m3u8[^"']*)["']/i) || data.match(/file\s*:\s*["']([^"']+\.mp4[^"']*)["']/i);
       if (fileMatch) {
         console.log(`[GoodStream] URL directa: ${fileMatch[1].substring(0, 80)}...`);
-        return { url: fileMatch[1], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+        const origin = new URL(embedUrl).origin;
+        return { url: fileMatch[1], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
       }
       const m3u8Match = data.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
       if (m3u8Match) {
         console.log(`[GoodStream] m3u8 directo: ${m3u8Match[0].substring(0, 80)}...`);
-        return { url: m3u8Match[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+        const origin = new URL(embedUrl).origin;
+        return { url: m3u8Match[0], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
       }
       console.log("[GoodStream] No se encontr\xF3 URL");
       return null;
@@ -437,24 +441,28 @@ function resolveVimeos(embedUrl) {
         if (sourceMatch) {
           const url = sourceMatch[1].startsWith("/") ? embedHost + sourceMatch[1] : sourceMatch[1];
           console.log(`[Vimeos] URL en packed: ${url.substring(0, 80)}...`);
-          return { url, quality: "1080p", headers: { "User-Agent": UA, Referer: embedUrl } };
+          const origin = new URL(embedUrl).origin;
+          return { url, quality: "1080p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
         }
         const m3u8 = unpacked.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
         if (m3u8) {
           console.log(`[Vimeos] m3u8 en packed: ${m3u8[0].substring(0, 80)}...`);
-          return { url: m3u8[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+          const origin = new URL(embedUrl).origin;
+          return { url: m3u8[0], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
         }
       }
       const fileMatch = data.match(/file\s*:\s*["']([^"']+\.m3u8[^"']*)["']/i) || data.match(/["']file["']\s*:\s*["']([^"']+\.m3u8[^"']*)["']/i) || data.match(/file\s*:\s*["']([^"']+\.mp4[^"']*)["']/i);
       if (fileMatch) {
         const url = fileMatch[1].startsWith("/") ? embedHost + fileMatch[1] : fileMatch[1];
         console.log(`[Vimeos] URL directa: ${url.substring(0, 80)}...`);
-        return { url, quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+        const origin = new URL(embedUrl).origin;
+        return { url, quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
       }
       const m3u8Match = data.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
       if (m3u8Match) {
         console.log(`[Vimeos] m3u8 raw: ${m3u8Match[0].substring(0, 80)}...`);
-        return { url: m3u8Match[0], quality: "720p", headers: { "User-Agent": UA, Referer: embedUrl } };
+        const origin = new URL(embedUrl).origin;
+        return { url: m3u8Match[0], quality: "720p", headers: { "User-Agent": UA, Referer: `${origin}/`, Origin: origin } };
       }
       console.log("[Vimeos] No se encontr\xF3 URL");
       return null;
@@ -604,10 +612,10 @@ function processJsonData(dataStr) {
               title: `${langLabel}[${serverName}] ${qualityLabel}`,
               url: resolved.url,
               quality: qualityLabel,
-              headers: resolved.headers || {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+              headers: __spreadValues({
+                "User-Agent": UA,
                 "Referer": serverUrl
-              }
+              }, resolved.headers)
             });
             console.log(`[Vimeus] \u2705 Resolved: ${serverName} -> ${resolved.url.substring(0, 60)}...`);
           } else {

@@ -1,6 +1,6 @@
 {
   "name": "Nuvio Latino Hub Providers",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "scrapers": [
     {
       "id": "doramasflix",
@@ -8,23 +8,39 @@
       "description": "Doramas Coreanos, Chinos, Japoneses y Asiaticos en Espanol. Estructura oficial Nuvio con extracción múltiple.",
       "version": "1.2.0",
       "author": "Kokuuuuuun",
-      "supportedTypes": ["movie", "tv"],
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
       "filename": "providers/doramasflix.js",
       "enabled": true,
-      "contentLanguage": ["es"],
-      "formats": ["m3u8", "mp4"]
+      "contentLanguage": [
+        "es"
+      ],
+      "formats": [
+        "m3u8",
+        "mp4"
+      ]
     },
     {
       "id": "vimeus",
       "name": "Vimeus",
       "description": "Películas, series y anime en Latino/Español vía Vimeus. Múltiples servidores (VOE, StreamWish, Filemoon, etc).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Kokuuuuuun",
-      "supportedTypes": ["movie", "tv"],
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
       "filename": "providers/vimeus.js",
       "enabled": true,
-      "contentLanguage": ["es"],
-      "formats": ["m3u8", "mp4"]
+      "contentLanguage": [
+        "es"
+      ],
+      "formats": [
+        "m3u8",
+        "mp4"
+      ]
     }
   ]
 }

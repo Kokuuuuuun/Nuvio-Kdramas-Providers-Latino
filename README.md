@@ -78,4 +78,3 @@ node test-vimeus.js movie 550
 
 - [ ] **Bypass Cloudflare** - Para servidores como HlsWish
 - [ ] **DoramasVIP** - Próxima integración
-- [ ] **Personalización de Calidad** - Selector manual en Nuvio

@@ -1,6 +1,6 @@
 /**
  * doramasflix - Built from src/doramasflix/
- * Generated: 2026-05-05T21:37:35.866Z
+ * Generated: 2026-05-15T01:21:31.358Z
  */
 var __create = Object.create;
 var __defProp = Object.defineProperty;
@@ -179,7 +179,7 @@ function resolveVoe(embedUrl) {
           if (decoded && (decoded.source || decoded.direct_access_url)) {
             const url = decoded.source || decoded.direct_access_url;
             console.log(`[VOE] URL encontrada: ${url.substring(0, 80)}...`);
-            return { url, quality: "1080p", headers: { "Referer": embedUrl } };
+            return { url, quality: "1080p", headers: { "User-Agent": UA, "Referer": embedUrl, "Origin": new URL(embedUrl).origin } };
           }
         }
       }
@@ -203,7 +203,7 @@ function resolveVoe(embedUrl) {
           }
         }
         console.log(`[VOE] URL encontrada (fallback): ${url.substring(0, 80)}...`);
-        return { url, quality: "720p", headers: { "Referer": embedUrl } };
+        return { url, quality: "720p", headers: { "User-Agent": UA, "Referer": embedUrl, "Origin": new URL(embedUrl).origin } };
       }
       console.log("[VOE] No se encontr\xF3 URL");
       return null;
@@ -323,7 +323,7 @@ function resolveStreamwish(embedUrl) {
         if (url.startsWith("/"))
           url = embedHost + url;
         console.log(`[StreamWish] URL encontrada: ${url.substring(0, 80)}...`);
-        return { url, quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/" } };
+        return { url, quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/", "Origin": embedHost } };
       }
       const packMatch = data.match(
         /eval\(function\(p,a,c,k,e,[a-z]\)\{[^}]+\}\s*\('([\s\S]+?)',\s*(\d+),\s*(\d+),\s*'([\s\S]+?)'\.split\('\|'\)/
@@ -339,7 +339,7 @@ function resolveStreamwish(embedUrl) {
             if (url) {
               const fullUrl = url.startsWith("/") ? embedHost + url : url;
               console.log(`[StreamWish] URL encontrada: ${fullUrl.substring(0, 80)}...`);
-              return { url: fullUrl, quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/" } };
+              return { url: fullUrl, quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/", "Origin": embedHost } };
             }
           } catch (e) {
           }
@@ -348,7 +348,7 @@ function resolveStreamwish(embedUrl) {
       const rawM3u8 = data.match(/https?:\/\/[^"'\s\\]+\.m3u8[^"'\s\\]*/i);
       if (rawM3u8) {
         console.log(`[StreamWish] URL encontrada: ${rawM3u8[0].substring(0, 80)}...`);
-        return { url: rawM3u8[0], quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/" } };
+        return { url: rawM3u8[0], quality: "720p", headers: { "User-Agent": UA, "Referer": embedHost + "/", "Origin": embedHost } };
       }
       console.log("[StreamWish] No se encontr\xF3 URL");
       return null;
